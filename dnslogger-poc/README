@@ -1,0 +1,29 @@
+Quick & dirty proof-of-concept code to listen to DNS requests and decode
+BASE32-encoded telemetry data.
+
+Dependencies: python2.7, dnslib 
+dnslib can be found at https://pypi.python.org/pypi/dnslib or installed via:
+$ sudo pip install dnslib
+
+Important variables to set at the top of the code:
+
+PORT = port # to listen on.  Of course, DNS servers will look for this to be
+port 53, so either redirect port 53 traffic to this port, or change this to
+53 and run as root.
+
+SUBDOMAIN - the server will ignore queries that don't end in this.  Be sure
+it matches both what you've set in the TOWL device and what you have your
+authoritative nameserver sending you NS queries for.
+
+LOGDIR - the directory where the decoded DNS data will be logged.  It will
+auto-append to files named xyy.log where xyy = the device_id.
+
+** SECURITY WARNING ** 
+
+This is proof-of-concept code.  While I believe it is reasonably safe, I make
+no warrantees that it doesn't contain RCE or other types of security
+vulnerabilities.  If you are handling untrusted data directly from the Internet
+please audit the code yourself or take whatever precautions are necessary before
+running this.  I would not recommend running this code as-is in a privleged
+environment, especially as root.
+
