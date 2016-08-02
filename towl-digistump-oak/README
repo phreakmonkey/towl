@@ -1,6 +1,10 @@
 The .ino file in this directory was developed for the Digistump Oak ESP8266
 IoT chip.  Implementation notes:
 
+Dependencies:
+- Digistump Oak Arduino libraries
+- TinyGPS library (https://github.com/mikalhart/TinyGPS)
+
 Important variables to set in the top of the .ino file:
 
 SUBDOMAIN - must be set to the subdomain/domain name that DNS queries will be
