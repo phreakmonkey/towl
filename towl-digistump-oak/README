@@ -4,6 +4,7 @@ IoT chip.  Implementation notes:
 Dependencies:
 - Digistump Oak Arduino libraries
 - TinyGPS library (https://github.com/mikalhart/TinyGPS)
+- NetRat's Base32 Arduino library (https://github.com/NetRat/Base32)
 
 Important variables to set in the top of the .ino file:
 
