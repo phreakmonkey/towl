@@ -15,6 +15,7 @@
 #define SUBDOMAIN "foobar.example.com"
 
 // LED pin (currently just indicates GPS signal status via PWM)
+// Hint: DigiStump Oak = 1, Adafruit Huzzah = 0, others = ??
 #define LED 1
 
 // NMEA GPS Serial baudrate

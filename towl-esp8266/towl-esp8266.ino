@@ -60,6 +60,7 @@ void homeConnect();
 
 void setup() {
   Serial.begin(GPS_BAUD);
+  delay(100);
   Serial.println("Startup sequence.");
   pinMode(LED, OUTPUT);
   analogWrite(LED, 0);
@@ -67,6 +68,8 @@ void setup() {
   memset(tstore, 0, sizeof(tstore));
 #ifdef OAK
   homeConnect();
+#else
+  WiFi.mode(WIFI_STA);
 #endif
 }
 
@@ -209,18 +212,23 @@ int connectAP() {
     Serial.print(wSSID);
     WiFi.disconnect();
     WiFi.persistent(false);
-    for (uint8_t i=0; i < 65; i++) {
 #ifdef OAK
       wstatus = WiFi.begin_internal(wSSID, NULL, 0, NULL);
 #else 
-      wstatus = WiFi.begin(wSSID, NULL, 0, NULL);
+      wstatus = WiFi.begin(wSSID, NULL, 0, NULL, true);
 #endif
+    for (uint8_t i=0; i < 65; i++) {
       if (wstatus == WL_CONNECTED) {
         Serial.print(". connected. ");
         Serial.println(i * 100);
         return 1;
       }
+      if (wstatus == WL_CONNECT_FAILED) {
+        Serial.println(". connect failed.");
+        return 0;
+      }
       serDelay(100);
+      wstatus = WiFi.status();
     }
     Serial.println(". timeout.");
   }
