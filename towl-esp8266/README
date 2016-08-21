@@ -1,0 +1,53 @@
+The .ino file in this directory was developed for the Digistump Oak ESP8266
+IoT chip.  May work on Adafruit Huzzah or other generic ESP8266 boards.
+
+ Implementation notes:
+
+Dependencies:
+- Digistump Oak or generic ESP8266 Arduino libraries
+- TinyGPS library (https://github.com/mikalhart/TinyGPS)
+- NetRat's Base32 Arduino library (https://github.com/NetRat/Base32)
+
+Important variables to set in config.h file:
+
+***  DIGISTUMP OAK  (http://digistump.com/products/145)
+Uncomment the "#define OAK" and "#define HOMESSID" lines for the Digistump
+Oak board & libraries.  Comment them out (e.g. //#define OAK) for generic
+ESP8266 boards & libraries.   You will get compile errors if you try to
+compile the OAK code with the generic library or vice-versa.
+
+HOMESSID - when the device is powered up, it attempts find this SSID first.
+If it is present, it calls Particle.connect() and waits for seven seconds to
+allow an OTA firmware update.  Note - this must match whatever SSID you have
+configured in the Digistump OAK firmware in order to work.  If you change one
+without the other, you'll have to either change the OAK config to match this
+or reflash the firmware from oak safe mode.
+
+Oak Flashing:  THIS DEVICE REQUIRES YOU SELECT "BOARD":
+  "Digistump Oak (PIN 1 Safe Mode, Manual Config Only)"
+
+If you flash it with "PIN 1 Safe Mode, Default" then it will reboot into config
+mode almost immediately after it begins scanning for open APs.
+
+With this mode you can always revert it to config/OTA mode by tying pin-1 to
+ground during power-up, but it won't fall back to that mode automatically if
+it fails to connect to your AP once it's running.
+*** END DIGISTUMP SPECIFIC NOTES.
+
+
+SUBDOMAIN - must be set to the subdomain/domain name that DNS queries will be
+sent to.  This will be appended to each query
+
+DEVICE_ID - this is added as an additional subdomain beneath SUBDOMAIN.  The 
+PoC server expects this to be in the format "x##" where x = a letter 
+and ## = a number between 00 and 99.  E.g. "a01" or "c55".  This identifier
+is useful for telling queries from different devices apart.
+
+GPS_BAUD - set to match the baud rate of your serial GPS.
+(Tested with MTK-3329 GPS and a u-blox 6 knockoff in NMEA mode. Any basic NMEA
+GPS module should work)
+
+
+Have fun!
+K.C.  phreakmonkey@gmail.com
+

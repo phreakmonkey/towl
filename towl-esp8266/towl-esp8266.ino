@@ -1,28 +1,13 @@
 // Telemetry over Opportunistic WiFi Links (T.O.W.L.)
 // http://phreakmonkey.com/projects/towl
 
-//  The queries are sent in the form of S-{BASE32}.DEVICE_ID.SUBDOMAIN
-//  #define DEVICE_ID and SUBDOMAIN below:
-#define DEVICE_ID "a01"
-#define SUBDOMAIN "foobar.example.com"
+// !! Be sure to check configuration settings in config.h before compiling !!
 
-// Home SSID.  I will check for OTA updates for first 7 seconds when started
-// in the vicinity of this SSID:
-#define HOMESSID "Linksys"
+#include "config.h"
 
-// LED pin (currently just indicates GPS signal status via PWM)
-#define LED 1
-
-// NMEA GPS Serial baudrate
-// Note this will also be the bitrate of debug output messages on TX pin
-#define GPS_BAUD 115200
-
-// TSTORE_SZ = max number of telemetry entries to backlog (16 bytes RAM each)
-#define TSTORE_SZ 200
-// MAX_INTERVAL : Highest interval to track in 10 sec increments. (6 = 1 min)
-#define MAX_INTERVAL 12
-
+#ifdef OAK
 SYSTEM_MODE(SEMI_AUTOMATIC);
+#endif
 
 #include <TimeLib.h>
 #include <Time.h>
@@ -36,6 +21,7 @@ SYSTEM_MODE(SEMI_AUTOMATIC);
 #include <WiFiUdp.h>
 #include <EEPROM.h>
 
+// Globals:
 Base32 base32;
 TinyGPS gps;
 
@@ -55,6 +41,23 @@ uint32_t last_rec = 0; // Last record time
 uint32_t last_rep = 0; // Last report time
 uint8_t startup = 3;
 
+// Function prototypes:
+void parseGPS(void);
+void setGPSTime(void);
+struct telem * getTelem(void);
+uint16_t findSlot(uint8_t);
+void storeTelem(struct telem *);
+uint8_t sendStoredTelem(void);
+int connectAP(void);
+uint8_t sendDNSTelem(struct telem *);
+void serDelay(unsigned long);
+void setup(void);
+void loop(void);
+#ifdef OAK
+void homeConnect();
+#endif
+
+
 void setup() {
   Serial.begin(GPS_BAUD);
   Serial.println("Startup sequence.");
@@ -62,7 +65,9 @@ void setup() {
   analogWrite(LED, 0);
   randomSeed(analogRead(0));
   memset(tstore, 0, sizeof(tstore));
+#ifdef OAK
   homeConnect();
+#endif
 }
 
 void loop() {
@@ -91,6 +96,7 @@ void loop() {
   }
 }
 
+#ifdef OAK
 void homeConnect() {
   int numNets = WiFi.scanNetworks();
   uint16_t thisNet;
@@ -110,6 +116,7 @@ void homeConnect() {
   }
   return;
 }
+#endif
 
 uint16_t findSlot(uint8_t pmode) {
   // Find a memory slot that is empty or at a higher time
@@ -203,7 +210,11 @@ int connectAP() {
     WiFi.disconnect();
     WiFi.persistent(false);
     for (uint8_t i=0; i < 65; i++) {
+#ifdef OAK
       wstatus = WiFi.begin_internal(wSSID, NULL, 0, NULL);
+#else 
+      wstatus = WiFi.begin(wSSID, NULL, 0, NULL);
+#endif
       if (wstatus == WL_CONNECTED) {
         Serial.print(". connected. ");
         Serial.println(i * 100);
