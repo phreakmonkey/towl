@@ -14,7 +14,7 @@ import struct
 # Port to listen on.  I use a high port to run as a non-root user and then
 # map to it in iptables.  Alternatively change to port 53 and run as root.
 PORT = 5300
-SUBDOMAIN = '.foobar.example.com'
+SUBDOMAIN = '.foobar.example.com.'
 LOGDIR = '/var/tmp'
 
 def parseCovert(devid, data):
