@@ -140,7 +140,7 @@ uint16_t findSlot(uint8_t pmode) {
 
 void storeTelem(struct telem *tdata) {
   uint16_t slot;
-  uint32_t thisMode = ((millis() - last_rep) / 10000) - 1;
+  uint8_t thisMode = ((millis() - last_rep) / 10000) - 1;
   if (thisMode >= MAX_INTERVAL) {
     last_rep = millis();  // Reset counter at MAX_INTERVAL
     thisMode = 0; 
