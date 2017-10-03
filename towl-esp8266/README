@@ -6,6 +6,7 @@ IoT chip.  May work on Adafruit Huzzah or other generic ESP8266 boards.
 Dependencies:
 - Digistump Oak or generic ESP8266 Arduino libraries
 - TinyGPS library (https://github.com/mikalhart/TinyGPS)
+- Arduino Time library (https://github.com/PaulStoffregen/Time)
 - NetRat's Base32 Arduino library (https://github.com/NetRat/Base32)
 
 Important variables to set in config.h file:
